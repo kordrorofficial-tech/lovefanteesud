@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:
+    radial-gradient(circle at 80% 20%, #ffffff22 2px, transparent 3px),
+    radial-gradient(circle at 30% 10%, #ffffff33 2px, transparent 3px),
+    linear-gradient(#050b2e,#020617);
+  background-size:200px 200px,250px 250px,100% 100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Arial',sans-serif;
+  color:white;
+  overflow:hidden;
+}
+
+/* พระจันทร์ */
+.moon{
+  position:absolute;
+  top:8%;
+  right:10%;
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:#fff8d6;
+  box-shadow:0 0 30px #fff8d6;
+}
+
+/* ทะเล */
+.sea{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:40%;
+  background: linear-gradient(#024873,#012235);
+}
+
+/* กล่อง */
+.card{
+  z-index:10;
+  text-align:center;
+  max-width:90%;
+}
+
+/* ตัวอักษรใหญ่ */
+h1{font-size:2.4rem;}
+h2{font-size:2rem;}
+p{font-size:1.5rem;}
+
+/* fade */
+.fade{
+  animation:fade 4s forwards;
+}
+@keyframes fade{
+  0%{opacity:0;}
+  20%{opacity:1;}
+  80%{opacity:1;}
+  100%{opacity:0;}
+}
+
+button{
+  padding:14px 28px;
+  border:none;
+  border-radius:30px;
+  font-size:1.2rem;
+  cursor:pointer;
+  margin:8px;
+}
+
+.love{background:#e91e63;color:white;}
+.no{
+  background:#777;
+  color:white;
+  position:absolute;
+  transition:all .35s ease;
+}
+
+/* ปุ่มเปิดเสียง */
+.sound-btn{
+  position:fixed;
+  top:15px;
+  left:15px;
+  background:#ff4081;
+  color:white;
+  padding:10px 16px;
+  border-radius:20px;
+  font-size:1rem;
+  z-index:99;
+}
+
+/* พลุ */
+.firework{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  animation:boom 1.5s forwards;
+}
+@keyframes boom{
+  from{transform:scale(0);opacity:1;}
+  to{transform:scale(8);opacity:0;}
+}
+
+/* พลุทะเล */
+.bg-firework{
+  position:absolute;
+  bottom:40%;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  animation:bgBoom 3s forwards;
+}
+@keyframes bgBoom{
+  0%{transform:translateY(0);opacity:1;}
+  70%{transform:translateY(-120px);opacity:1;}
+  100%{transform:translateY(-180px) scale(6);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="moon"></div>
+<div class="sea"></div>
+
+<button class="sound-btn" onclick="enableSound()">🔊 เปิดเสียง</button>
+<div class="card" id="card"></div>
+
+<!-- เสียง -->
+<audio id="bgm" loop>
+  <source src="https://cdn.pixabay.com/audio/2023/05/09/audio_6a9b92f6c7.mp3">
+</audio>
+<audio id="click">
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_20c5ff0b7a.mp3">
+</audio>
+
+<script>
+const card=document.getElementById("card");
+const bgm=document.getElementById("bgm");
+const click=document.getElementById("click");
+
+function enableSound(){
+  bgm.volume=0.6;
+  bgm.play();
+}
+
+/* เรื่องเปิด */
+const story=[
+ "ปีนี้เค้าเกือบจะไม่มีอะไรแล้ว",
+ "จนมาเจอแฟน",
+ "ขอบคุณที่เข้ามาในชีวิตเค้านะ"
+];
+let i=0;
+
+function showStory(){
+  if(i<story.length){
+    card.innerHTML=`<p class="fade">${story[i]}</p>`;
+    i++;
+    setTimeout(showStory,4000);
+  }else{
+    ask();
+  }
+}
+showStory();
+
+/* คำถาม */
+function ask(){
+  card.innerHTML=`
+    <h2>แฟนรักเค้ามั้ยยย 💖</h2>
+    <button class="love" onclick="yes()">รักแฟน</button>
+    <button class="no" id="no">ไม่รัก</button>
+  `;
+  dodge();
+}
+
+/* ปุ่มไม่รักหลบ */
+function dodge(){
+  const no=document.getElementById("no");
+  no.onmouseover=()=>{
+    no.style.left=Math.random()*70+"%";
+    no.style.top=Math.random()*70+"%";
+  };
+  no.onclick=()=>{
+    click.play();
+    card.innerHTML="<h2>ไม่รักจริงอ่ออ 😿</h2>";
+    setTimeout(ask,1500);
+  };
+}
+
+/* กดรัก */
+function yes(){
+  click.play();
+  card.innerHTML=`
+    <h1>HAPPY NEW YEAR KUB 🎉</h1>
+    <p>เค้าก็รักแฟนมากก ❤️</p>
+    <p>อยู่กับเค้าไปอีกหลายๆปีเลยนะ</p>
+    <p><b>ห้ามมีกิ๊ก</b></p>
+    <p>จุ้บบ 😘</p>
+  `;
+  fireworks();
+}
+
+/* พลุ */
+function fireworks(){
+  for(let i=0;i<12;i++){
+    let f=document.createElement("div");
+    f.className="firework";
+    f.style.left=Math.random()*100+"vw";
+    f.style.top=Math.random()*40+"vh";
+    f.style.background=`hsl(${Math.random()*360},100%,70%)`;
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1500);
+  }
+}
+
+/* พลุทะเลต่อเนื่อง */
+setInterval(()=>{
+  let f=document.createElement("div");
+  f.className="bg-firework";
+  f.style.left=Math.random()*100+"vw";
+  f.style.background=`hsl(${Math.random()*360},100%,70%)`;
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),3000);
+},1000);
+</script>
+
+</body>
+</html>
